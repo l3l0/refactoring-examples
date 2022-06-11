@@ -16,7 +16,7 @@ services:
             - ./docker/dev/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
             - .:/home/refactoring-examples/project
         ports:
-          - "80:80"
+          - "4000:80"
         extra_hosts:
           - "host.docker.internal:host-gateway"
     database:
