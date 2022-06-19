@@ -7,6 +7,8 @@ namespace App\Entity;
 use App\Repository\MedicalExaminationOrderRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: MedicalExaminationOrderRepository::class)]
 class MedicalExaminationOrder
@@ -25,8 +27,8 @@ class MedicalExaminationOrder
     #[ORM\Column(type: 'datetime_immutable')]
     private ?DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column(type: 'integer')]
-    private ?int $patientIdentificationNumber = null;
+    #[ORM\Column(type: 'string', length: 11)]
+    private ?string $patientIdentificationNumber = null;
 
     #[ORM\Column(type: 'string', length: 64, nullable: true)]
     private ?string $version = null;
@@ -37,6 +39,14 @@ class MedicalExaminationOrder
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $agreementNumber = null;
 
+    #[ORM\Column(type: 'uuid', nullable: false)]
+    private ?Uuid $accountId = null;
+
+    public function __construct()
+    {
+        $this->token = md5(uniqid((string) mt_rand(), true));
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,12 +54,12 @@ class MedicalExaminationOrder
 
     public function getOrderingId(): ?string
     {
-        return $this->ordering_id;
+        return $this->orderingId;
     }
 
-    public function setOrderingId(string $ordering_id): self
+    public function setOrderingId(string $orderingId): self
     {
-        $this->ordering_id = $ordering_id;
+        $this->orderingId = $orderingId;
 
         return $this;
     }
@@ -78,12 +88,12 @@ class MedicalExaminationOrder
         return $this;
     }
 
-    public function getPatientIdentificationNumber(): ?int
+    public function getPatientIdentificationNumber(): ?string
     {
         return $this->patientIdentificationNumber;
     }
 
-    public function setPatientIdentificationNumber(int $patientIdentificationNumber): self
+    public function setPatientIdentificationNumber(string $patientIdentificationNumber): self
     {
         $this->patientIdentificationNumber = $patientIdentificationNumber;
 
@@ -122,6 +132,18 @@ class MedicalExaminationOrder
     public function setAgreementNumber(?string $agreementNumber): self
     {
         $this->agreementNumber = $agreementNumber;
+
+        return $this;
+    }
+
+    public function getAccountId(): ?Uuid
+    {
+        return $this->accountId;
+    }
+
+    public function setAccountId(?Uuid $accountId): self
+    {
+        $this->accountId = $accountId;
 
         return $this;
     }

@@ -39,6 +39,11 @@ class MedicalResult
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?DateTimeImmutable $decisionDate = null;
 
+    public function __construct()
+    {
+        $this->token = md5(uniqid((string) mt_rand(), true));
+    }
+
     public function getId(): ?int
     {
         return $this->id;
