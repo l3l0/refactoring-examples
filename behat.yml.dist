@@ -1,0 +1,12 @@
+default:
+    suites:
+        default:
+            paths: [ '%paths.base%/features/acceptance-criteria' ]
+            contexts:
+                - App\Tests\Behat\AcceptanceCriteriaContext
+
+    extensions:
+        FriendsOfBehat\SymfonyExtension:
+           kernel:
+              environment: test
+           bootstrap: tests/bootstrap.php
