@@ -10,6 +10,9 @@ security:
                   36ff8d22-4bc1-4527-8596-f0e1a47e6b4b:
                       password: 'test123'
                       roles: ['ROLE_USER']
+                  d55f325c-639d-4564-9c55-ffb7af6410bf:
+                      password: 'test123'
+                      roles: ['ROLE_USER']
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/

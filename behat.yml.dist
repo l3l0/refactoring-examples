@@ -4,6 +4,10 @@ default:
             paths: [ '%paths.base%/features/acceptance-criteria' ]
             contexts:
                 - App\Tests\Behat\AcceptanceCriteriaContext
+        api:
+            paths: [ '%paths.base%/features/api' ]
+            contexts:
+                - App\Tests\Behat\ApiContext
 
     extensions:
         FriendsOfBehat\SymfonyExtension:
