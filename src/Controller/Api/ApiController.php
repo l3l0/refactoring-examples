@@ -9,6 +9,10 @@ use App\Entity\MedicalResult;
 use App\Form\FormUtils;
 use App\Form\MedicalExaminationOrderType;
 use App\Form\MedicalResultFormType;
+use App\MedicalTreatment\Domain\Exception\TreatmentDecisionAlreadyDone;
+use App\MedicalTreatment\Query\MedicalTreatmentDecisionQuery;
+use App\MedicalTreatment\Query\MediclaTreatmentDecisionQuery\AgreementNumberNotFound;
+use App\MedicalTreatment\UseCase\DecideAboutTreatmentCommand;
 use App\Utils\MedicalExaminationOrderManager;
 use App\Utils\MedicalResultManager;
 use Psr\Log\LoggerInterface;
@@ -17,6 +21,9 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
+use Symfony\Component\Messenger\Exception\MessageDecodingFailedException;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Uid\Uuid;
 
@@ -86,62 +93,50 @@ class ApiController extends AbstractController
 
     #[Route(path: '/api/medical-result/{token}/decision', methods: ['POST'])]
     public function resultsDecisionAction(
-        Request                        $request,
-        string                         $token,
-        MedicalExaminationOrderManager $orderManager,
-        MedicalResultManager           $medicalResultManager
+        string                        $token,
+        MedicalTreatmentDecisionQuery $decisionQuery,
+        MessageBusInterface $bus
     ): JsonResponse {
-        if (!$this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw $this->createAccessDeniedException();
-        }
-
         $user = $this->getUser();
+        $userId = $user->getUserIdentifier();
 
-        $medicalResult = $medicalResultManager->getOneMedicalResultByToken($token);
-
-        if ($medicalResult === null) {
-            $this->createNotFoundException(sprintf('Medical result not found for %s token', $token));
-        }
-
-        $order = $orderManager->getOneByNumber($medicalResult->getAgreementNumber());
-
-        if ($order === null) {
+        if (!$decisionQuery->medicalExaminationOrderExists(
+            $token,
+            Uuid::fromString($userId)
+        )) {
             return $this->json([
-                'error' => 'examination order not found for medical result',
-                'agreement_number' => $medicalResult->getAgreementNumber()
-            ], Response::HTTP_BAD_REQUEST);
+                'error' => 'examination order not found for token and account',
+                'token' => $token,
+                'account_id' => $userId
+            ], Response::HTTP_NOT_FOUND);
         }
 
-        if ($order->getAccountId()?->toRfc4122() !== $user->getUserIdentifier()) {
-            throw $this->createAccessDeniedException();
-        }
-
-        if ($medicalResult->getTreatmentDecision() !== null) {
-            return $this->json(['error' => 'decision already made'], Response::HTTP_CONFLICT);
-        }
-
-        $form = $this->createFormBuilder()
-            ->add('save', SubmitType::class)
-            ->getForm();
-        $form->submit($request->request->all());
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $medicalResult->setTreatmentDecision('yes');
-            $medicalResult->setDecisionDate(new \DateTimeImmutable());
-
-            $medicalResult = $medicalResultManager->updateMedicalResult($medicalResult);
-
+        try {
+            $bus->dispatch(new DecideAboutTreatmentCommand(
+                $token,
+                $userId
+            ));
             return $this->json([
-                'message' => 'decision updated',
-                'medicalExaminationOrder' => $order,
-                'medicalResult' => $medicalResult
+                'message' => 'decision updated'
             ]);
+        } catch (HandlerFailedException $e) {
+            $this->logger->critical('Error during handling message for decision result', ['exception' => $e]);
+            if ($e->getNestedExceptionOfClass(TreatmentDecisionAlreadyDone::class)) {
+                return $this->json([
+                    'errors' => 'decision already made'
+                ], Response::HTTP_CONFLICT);
+            }
+            return $this->internalServerErrorResponse();
+        } catch (\Exception $e) {
+            $this->logger->critical('Error during update result', ['exception' => $e]);
+            return $this->internalServerErrorResponse();
         }
+    }
 
+    private function internalServerErrorResponse(): JsonResponse
+    {
         return $this->json([
-            'errors' => FormUtils::getErrors($form),
-            'medicalExaminationOrder' => $order,
-            'medicalResult' => $medicalResult
-        ], JsonResponse::HTTP_BAD_REQUEST);
+            'errors' => ['Internal server error']
+        ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

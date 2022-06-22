@@ -34,7 +34,7 @@ Feature: Medical result decision API
       | token                | testUmowa01Token                     |
     When do "POST" request to "/api/medical-result/testUmowa01Token/decision" following data:
       | headers | CONTENT_TYPE=application/json, PHP_AUTH_USER=d55f325c-639d-4564-9c55-ffb7af6410bf, PHP_AUTH_PW=test123 |
-    Then request status code is 403
+    Then request status code is 404
 
 
   Scenario: Try to decide for medical results twice

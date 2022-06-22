@@ -41,7 +41,7 @@ class MedicalResultManager
     private function checkIfAlreadyExistsTheSameMedicalResult(MedicalResult $result): void
     {
         $alreadyAdded = $this->em->getRepository(MedicalResult::class)->findOneBy([
-            'agreementNumber' => $result->getAgreementNumber(),
+            'agreementNumber' => $result->getAgreementNumber()->toString(),
             'resultDocumentId' => $result->getResultDocumentId()
         ]);
 
@@ -54,7 +54,7 @@ class MedicalResultManager
     {
         $contract = $this->em
             ->getRepository(MedicalExaminationOrder::class)
-            ->findOneBy(['agreementNumber' => $result->getAgreementNumber()]);
+            ->findOneBy(['agreementNumber' => $result->getAgreementNumber()?->toString()]);
 
         if (null === $contract) {
             throw new NotFoundHttpException('Nie znaleziono rekordu zamówienia.');

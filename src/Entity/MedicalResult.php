@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\MedicalTreatment\Domain\AgreementNumber;
+use App\MedicalTreatment\Domain\TreatmentDecision;
 use App\Repository\MedicalResultRepository;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -61,9 +63,13 @@ class MedicalResult
         return $this;
     }
 
-    public function getAgreementNumber(): ?string
+    public function getAgreementNumber(): ?AgreementNumber
     {
-        return $this->agreementNumber;
+        if ($this->agreementNumber) {
+            return new AgreementNumber($this->agreementNumber);
+        }
+
+        return null;
     }
 
     public function setAgreementNumber(?string $agreementNumber): self
@@ -105,6 +111,17 @@ class MedicalResult
     public function setTreatmentDecision(?string $treatmentDecision): self
     {
         $this->treatmentDecision = $treatmentDecision;
+
+        return $this;
+    }
+
+    public function decideAboutTreatment(
+        TreatmentDecision $treatmentDecision,
+        DateTimeImmutable $decisionDate
+    ): self
+    {
+        $this->treatmentDecision = $treatmentDecision->value;
+        $this->decisionDate = $decisionDate;
 
         return $this;
     }
