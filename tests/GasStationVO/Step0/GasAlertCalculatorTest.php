@@ -9,10 +9,10 @@ class GasAlertCalculatorTest extends TestCase
 {
   public function testFor3Response()
   {
-    $torunOffice = ['lat' => 53.02879633770021, 'long' => 18.63850934547079];
+    $torunOffice = ['lat' => 53.0, 'long' => 18.6];
     $finder = new GasAlertCalculator([$torunOffice]);
 
-    $alert = $finder->calculate(53.02390516137652, 18.634435851394855, 0.3, 10);
+    $alert = $finder->calculate(53.1, 18.7, 1.2977510407241, 10);
 
     self::assertEquals(3, $alert);
   }
