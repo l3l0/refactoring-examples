@@ -12,7 +12,7 @@ class GasAlertCalculatorTest extends TestCase
     $torunOffice = ['lat' => 53.0, 'long' => 18.6];
     $finder = new GasAlertCalculator([$torunOffice]);
 
-    $alert = $finder->calculate(53.1, 18.7, 1.2977510407241, 10);
+    $alert = $finder->calculate(53.02879633770021, 18.634435851394855, 0.7, 10);
 
     self::assertEquals(3, $alert);
   }
