@@ -23,7 +23,7 @@ class DecideAboutTreatmentHandler implements MessageHandlerInterface
     public function __invoke(DecideAboutTreatmentCommand $command): void
     {
         $medicalResult = $this->medicalResultRepository->getOneByToken($command->token);
-        if ($medicalResult->getTreatmentDecision() !== null) {
+        if ($medicalResult->isAlreadyDecidedAboutTreatment()) {
             throw TreatmentDecisionAlreadyDone::forMedicalResultId((int) $medicalResult->getId());
         }
 

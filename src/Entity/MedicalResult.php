@@ -3,22 +3,19 @@
 namespace App\Entity;
 
 use App\MedicalTreatment\Domain\AgreementNumber;
-use App\MedicalTreatment\Domain\TreatmentDecision;
+use App\MedicalTreatment\Domain\MedicalResult as BaseMedicalResult;
 use App\Repository\MedicalResultRepository;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MedicalResultRepository::class)]
-class MedicalResult
+class MedicalResult extends BaseMedicalResult
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
-
-    #[ORM\Column(type: 'string', length: 32)]
-    private ?string $token = null;
+    protected ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $agreementNumber = null;
@@ -30,30 +27,23 @@ class MedicalResult
     private ?DateTimeImmutable $requiredDecisionDate;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $treatmentDecision = null;
-
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $treatmentDecisionType = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $clientIpAddress = null;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    protected ?string $treatmentDecision = null;
+
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?DateTimeImmutable $decisionDate = null;
+    protected ?DateTimeImmutable $decisionDate = null;
+
+    #[ORM\Column(type: 'string', length: 32)]
+    protected string $token;
 
     public function __construct()
     {
-        $this->token = md5(uniqid((string) mt_rand(), true));
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getToken(): ?string
-    {
-        return $this->token;
+        parent::__construct(md5(uniqid((string) mt_rand(), true)));
     }
 
     public function setToken(string $token): self
@@ -111,17 +101,6 @@ class MedicalResult
     public function setTreatmentDecision(?string $treatmentDecision): self
     {
         $this->treatmentDecision = $treatmentDecision;
-
-        return $this;
-    }
-
-    public function decideAboutTreatment(
-        TreatmentDecision $treatmentDecision,
-        DateTimeImmutable $decisionDate
-    ): self
-    {
-        $this->treatmentDecision = $treatmentDecision->value;
-        $this->decisionDate = $decisionDate;
 
         return $this;
     }

@@ -17,6 +17,11 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
+            MedicalTreatment:
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/MedicalTreatment/Domain'
+                prefix: 'App\MedicalTreatment\Domain'
+                alias: App
 when@test:
     doctrine:
         dbal:

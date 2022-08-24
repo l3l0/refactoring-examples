@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\MedicalTreatment\UseCase;
 
-use App\Entity\MedicalResult;
 use App\MedicalTreatment\Domain\Exception\MedicalResultNotFound;
 use App\MedicalTreatment\Domain\Exception\TreatmentDecisionAlreadyDone;
+use App\MedicalTreatment\Domain\MedicalResult;
 use App\MedicalTreatment\Domain\MedicalResultRepository;
 use App\MedicalTreatment\Domain\TreatmentDecision;
 use App\MedicalTreatment\UseCase\DecideAboutTreatmentCommand;
@@ -25,9 +25,6 @@ class DecideAboutTreatmentHandlerTest extends TestCase
     public function setUp(): void
     {
         $this->medicalResultRepository = new class implements MedicalResultRepository {
-            /**
-             * @var array<string, MedicalResult>
-             */
             private array $medicalResultsByToken = [];
             public function getOneByToken(string $token): MedicalResult
             {
@@ -61,8 +58,7 @@ class DecideAboutTreatmentHandlerTest extends TestCase
     public function testThatCannotAddDecisionToMedicalResultWhichAlreadyHasTreatmentDecision(): void
     {
         // arrange
-        $medicalResult = new MedicalResult();
-        $medicalResult->setToken('token123');
+        $medicalResult = new MedicalResult('token123');
         $medicalResult->decideAboutTreatment(TreatmentDecision::YES, new DateTimeImmutable());
         $this->medicalResultRepository->add($medicalResult);
 
@@ -79,8 +75,7 @@ class DecideAboutTreatmentHandlerTest extends TestCase
     public function testThatSuccessfullyDecideAboutTreatment(): void
     {
         // arrange
-        $medicalResult = new MedicalResult();
-        $medicalResult->setToken('token123');
+        $medicalResult = new MedicalResult('token123');
         $this->medicalResultRepository->add($medicalResult);
 
         // act
@@ -90,6 +85,6 @@ class DecideAboutTreatmentHandlerTest extends TestCase
         ));
 
         // assert
-        self::assertEquals(TreatmentDecision::YES->value, $medicalResult->getTreatmentDecision());
+        self::assertTrue($medicalResult->isAlreadyDecidedAboutTreatment());
     }
 }

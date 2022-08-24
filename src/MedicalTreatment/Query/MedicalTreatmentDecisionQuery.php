@@ -11,7 +11,6 @@ interface MedicalTreatmentDecisionQuery
     /**
      * @param string $medicalResultToken
      * @param Uuid $accountId
-     * @return void
      */
     public function medicalExaminationOrderExists(string $medicalResultToken, Uuid $accountId): bool;
 }

@@ -2,7 +2,6 @@
 
 namespace App\MedicalTreatment\Domain;
 
-use App\Entity\MedicalResult;
 use App\MedicalTreatment\Domain\Exception\MedicalResultNotFound;
 
 interface MedicalResultRepository
