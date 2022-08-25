@@ -19,6 +19,21 @@ services:
           - "4000:80"
         extra_hosts:
           - "host.docker.internal:host-gateway"
+    other_application:
+        build:
+            context: ./
+            dockerfile: docker/dev/Dockerfile
+        image: refactoring-examples-dev
+        volumes:
+            - ./docker/dev/vhost.conf:/etc/apache2/sites-enabled/000-default.conf
+            - ./docker/dev/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+            - .:/home/refactoring-examples/project
+        ports:
+            - "4001:80"
+        expose:
+            - 80
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
     database:
         image: 'postgres:13.3-alpine'
         environment:
@@ -33,6 +48,19 @@ services:
             - '5432'
         volumes:
             - refactoring-examples-postgresql:/var/lib/postgresql/data
+    broker_app:
+        image: dius/pact-broker:2.102.2.0
+        ports:
+            - "8080:80"
+        expose:
+            - 80
+        links:
+            - database
+        environment:
+            PACT_BROKER_DATABASE_USERNAME: main
+            PACT_BROKER_DATABASE_PASSWORD: main
+            PACT_BROKER_DATABASE_HOST: main
+            PACT_BROKER_DATABASE_NAME: pack-broker
 volumes:
     refactoring-examples-postgresql:
         external: true

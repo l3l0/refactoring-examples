@@ -15,11 +15,24 @@
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
         <server name="SYMFONY_PHPUNIT_VERSION" value="9.5" />
+        <env name="PACT_MOCK_SERVER_HOST" value="localhost"/>
+        <env name="PACT_MOCK_SERVER_PORT" value="7200"/>
+        <env name="PACT_CONSUMER_NAME" value="other"/>
+        <env name="PACT_CONSUMER_VERSION" value="1.0.0"/>
+        <env name="PACT_CONSUMER_TAG" value="master"/>
+        <env name="PACT_PROVIDER_NAME" value="someProvider"/>
+        <env name="PACT_OUTPUT_DIR" value=".\tests\pact-output\"/>
+        <env name="PACT_CORS" value="true"/>
+        <env name="PACT_MOCK_SERVER_HEALTH_CHECK_RETRY_SEC" value="2"/>
     </php>
 
     <testsuites>
         <testsuite name="Project Test Suite">
             <directory>tests</directory>
+            <exclude>./tests/MedicalTreatment/OtherApplicationIntegration/MedicalResultRepositoryTest.php</exclude>
+        </testsuite>
+        <testsuite name="PhpPact Consumer Example Tests">
+            <file>./tests/MedicalTreatment/OtherApplicationIntegration/MedicalResultRepositoryTest.php</file>
         </testsuite>
     </testsuites>
 
@@ -31,6 +44,15 @@
 
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
+        <listener class="PhpPact\Consumer\Listener\PactTestListener">
+            <arguments>
+                <array>
+                    <element key="0">
+                        <string>PhpPact Consumer Example Tests</string>
+                    </element>
+                </array>
+            </arguments>
+        </listener>
     </listeners>
 
     <!-- Run `composer require symfony/panther` before enabling this extension -->
