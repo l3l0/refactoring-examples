@@ -4,7 +4,7 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/annotations": "^1.0",
@@ -17,18 +17,18 @@
         "symfony/console": "*",
         "symfony/dotenv": "*",
         "symfony/flex": "^2",
-        "symfony/form": "6.1.*",
+        "symfony/form": "6.2.*",
         "symfony/framework-bundle": "*",
         "symfony/maker-bundle": "^1.43",
         "symfony/monolog-bundle": "^3.8",
-        "symfony/property-access": "6.1.*",
-        "symfony/property-info": "6.1.*",
-        "symfony/proxy-manager-bridge": "6.1.*",
+        "symfony/property-access": "6.2.*",
+        "symfony/property-info": "6.2.*",
+        "symfony/proxy-manager-bridge": "6.2.*",
         "symfony/runtime": "*",
-        "symfony/security-bundle": "6.1.*",
-        "symfony/serializer": "6.1.*",
-        "symfony/uid": "6.1.*",
-        "symfony/validator": "6.1.*",
+        "symfony/security-bundle": "6.2.*",
+        "symfony/serializer": "6.2.*",
+        "symfony/uid": "6.2.*",
+        "symfony/validator": "6.2.*",
         "symfony/yaml": "*"
     },
     "config": {
@@ -80,7 +80,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "6.1.*"
+            "require": "6.2.*"
         }
     }
 }
