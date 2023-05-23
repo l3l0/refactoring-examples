@@ -96,11 +96,9 @@ class ApiController extends AbstractController
         }
 
         $user = $this->getUser();
-
         $medicalResult = $medicalResultManager->getOneMedicalResultByToken($token);
-
         if ($medicalResult === null) {
-            $this->createNotFoundException(sprintf('Medical result not found for %s token', $token));
+            throw $this->createNotFoundException(sprintf('Medical result not found for %s token', $token));
         }
 
         $order = $orderManager->getOneByNumber($medicalResult->getAgreementNumber());
