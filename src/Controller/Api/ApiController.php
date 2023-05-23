@@ -99,7 +99,6 @@ class ApiController extends AbstractController
     ): JsonResponse {
         $user = $this->getUser();
         $userId = $user->getUserIdentifier();
-
         if (!$decisionQuery->medicalExaminationOrderExists(
             $token,
             Uuid::fromString($userId)
