@@ -36,7 +36,6 @@ Feature: Medical result decision API
       | headers | CONTENT_TYPE=application/json, PHP_AUTH_USER=d55f325c-639d-4564-9c55-ffb7af6410bf, PHP_AUTH_PW=test123 |
     Then request status code is 404
 
-
   Scenario: Try to decide for medical results twice
     Given Medical assistant "36ff8d22-4bc1-4527-8596-f0e1a47e6b4b" already issued such medical examination order:
       | patientIdentificationNumber | 91081611797 |

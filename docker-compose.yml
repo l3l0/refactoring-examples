@@ -19,6 +19,9 @@ services:
           - "4000:80"
         extra_hosts:
           - "host.docker.internal:host-gateway"
+        depends_on:
+            - base
+            - database
     other_application:
         build:
             context: ./
@@ -34,6 +37,9 @@ services:
             - 80
         extra_hosts:
             - "host.docker.internal:host-gateway"
+        depends_on:
+            - base
+            - database
     database:
         image: 'postgres:13.3-alpine'
         environment:
