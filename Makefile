@@ -21,10 +21,12 @@ create_database:
 	${EXEC_COMMAND} bin/console do:database:create --if-not-exists
 migrate_database:
 	${EXEC_COMMAND} bin/console do:migration:migrate --no-interaction
-test: prepare_test behat
+test: prepare_test phpunit behat
 prepare_test:
 	${EXEC_COMMAND} bin/console do:database:create --if-not-exists --env=test
 	${EXEC_COMMAND} bin/console do:migration:migrate --no-interaction --env=test
 behat:
 	${EXEC_COMMAND} vendor/bin/behat --suite=default
 	${EXEC_COMMAND} vendor/bin/behat --suite=api
+phpunit:
+	${EXEC_COMMAND} bin/phpunit
