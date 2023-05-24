@@ -8,9 +8,10 @@ use App\MedicalTreatment\Domain\Exception\MedicalResultNotFound;
 use App\MedicalTreatment\Domain\Exception\TreatmentDecisionAlreadyDone;
 use App\MedicalTreatment\Domain\MedicalResultRepository;
 use App\MedicalTreatment\Domain\TreatmentDecision;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class DecideAboutTreatmentHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class DecideAboutTreatmentHandler
 {
     public function __construct(private readonly MedicalResultRepository $medicalResultRepository)
     {}

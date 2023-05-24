@@ -24,7 +24,7 @@ class DbalApiMedicalResultQuery implements ApiMedicalResultQuery
     public function getOneByToken(string $token): MedicalResult
     {
         $result = $this->connection->fetchAssociative(
-            'SELECT mr.id, mr.decision_date, mr.treatment_decision 
+            'SELECT mr.id, mr.decision_date, mr.treatment_decision, mr.agreement_number
                    FROM medical_result mr WHERE mr.token = :token',
             [
                 'token' => $token
@@ -36,7 +36,7 @@ class DbalApiMedicalResultQuery implements ApiMedicalResultQuery
         }
 
         return new MedicalResult(
-            $result['id'],
+            (string) $result['id'],
             $result['treatment_decision'],
             $result['decision_date'] ? new DateTimeImmutable($result['decision_date']) : null
         );

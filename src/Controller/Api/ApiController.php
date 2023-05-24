@@ -10,6 +10,7 @@ use App\Form\FormUtils;
 use App\Form\MedicalExaminationOrderType;
 use App\Form\MedicalResultFormType;
 use App\MedicalTreatment\Domain\Exception\TreatmentDecisionAlreadyDone;
+use App\MedicalTreatment\Domain\MedicalResultRepository;
 use App\MedicalTreatment\Query\MedicalTreatmentDecisionQuery;
 use App\MedicalTreatment\Query\MediclaTreatmentDecisionQuery\AgreementNumberNotFound;
 use App\MedicalTreatment\UseCase\DecideAboutTreatmentCommand;
@@ -64,7 +65,7 @@ class ApiController extends AbstractController
     #[Route(path: '/api/medical-result', methods: ['POST'])]
     public function createMedicalResultAction(
         Request $request,
-        MedicalResultManager $medicalResultManager
+        MedicalResultRepository $medicalResultRepository
     ): JsonResponse {
         $medicalResult = new MedicalResult();
         $form = $this->createForm(MedicalResultFormType::class, $medicalResult);
@@ -76,7 +77,7 @@ class ApiController extends AbstractController
         ]);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $medicalResult = $medicalResultManager->addMedicalResult($medicalResult);
+            $medicalResultRepository->add($medicalResult, true);
             $response = $this->json($medicalResult);
 
             $this->logger->info('Create medical result decision response', [

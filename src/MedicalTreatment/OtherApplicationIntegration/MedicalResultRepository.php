@@ -50,6 +50,7 @@ class MedicalResultRepository implements MedicalResultRepositoryInterface
                 TreatmentDecision::from($response['treatmentDecision']),
                 new DateTimeImmutable($response['treatmentDecisionAt'])
             );
+            $medicalResult->setAgreementNumber($response['agreementNumber'] ?: '');
         }
 
         return $medicalResult;
@@ -77,7 +78,8 @@ class MedicalResultRepository implements MedicalResultRepositoryInterface
                         'clientIpAddress' => $entity->getClientIpAddress(),
                         'resultDocumentId' => $entity->getResultDocumentId(),
                         'treatmentDecision' => $entity->getTreatmentDecision(),
-                        'treatmentDecisionType' => $entity->getTreatmentDecisionType()
+                        'treatmentDecisionType' => $entity->getTreatmentDecisionType(),
+                        'token' => $entity->getToken(),
                     ]
                 ]
             )

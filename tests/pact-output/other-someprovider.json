@@ -23,7 +23,8 @@
         "body": {
           "id": 666,
           "treatmentDecision": "yes",
-          "treatmentDecisionAt": "2022-03-01T21:00:00+000Z"
+          "treatmentDecisionAt": "2022-03-01T21:00:00+000Z",
+          "agreementNumber": ""
         }
       }
     }

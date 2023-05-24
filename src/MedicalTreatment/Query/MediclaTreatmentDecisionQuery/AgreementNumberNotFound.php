@@ -8,10 +8,12 @@ use LogicException;
 
 class AgreementNumberNotFound extends LogicException
 {
-    public static function whenNotFoundMedicalResultForToken(string $token): self
+    public static function whenNotFoundMedicalResultForToken(string $token, ?\Throwable $previous = null): self
     {
         return new self(
-            sprintf('Agreement number not found cause cannot find medical result with token %s', $token)
+            sprintf('Agreement number not found cause cannot find medical result with token %s', $token),
+            0,
+            $previous
         );
     }
 

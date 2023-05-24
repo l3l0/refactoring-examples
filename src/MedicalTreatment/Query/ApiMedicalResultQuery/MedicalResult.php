@@ -12,7 +12,8 @@ class MedicalResult implements JsonSerializable
     public function __construct(
         public readonly string $id,
         public readonly ?string $treatmentDecision,
-        public readonly ?DateTimeImmutable $treatmentDecisionAt
+        public readonly ?DateTimeImmutable $treatmentDecisionAt,
+        public readonly ?string $agreementNumber = null
     ) {}
 
     public function jsonSerialize(): array
@@ -20,7 +21,8 @@ class MedicalResult implements JsonSerializable
         return [
             'id' => $this->id,
             'treatmentDecision' => $this->treatmentDecision,
-            'treatmentDecisionAt' => $this->treatmentDecisionAt?->format(DATE_ATOM)
+            'treatmentDecisionAt' => $this->treatmentDecisionAt?->format(DATE_ATOM),
+            'agreementNumber' => $this->agreementNumber ?? ''
         ];
     }
 }

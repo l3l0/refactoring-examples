@@ -18,7 +18,7 @@ class MedicalResult extends BaseMedicalResult
     protected ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $agreementNumber = null;
+    protected ?string $agreementNumber = null;
 
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $resultDocumentId = null;
@@ -49,22 +49,6 @@ class MedicalResult extends BaseMedicalResult
     public function setToken(string $token): self
     {
         $this->token = $token;
-
-        return $this;
-    }
-
-    public function getAgreementNumber(): ?AgreementNumber
-    {
-        if ($this->agreementNumber) {
-            return new AgreementNumber($this->agreementNumber);
-        }
-
-        return null;
-    }
-
-    public function setAgreementNumber(?string $agreementNumber): self
-    {
-        $this->agreementNumber = $agreementNumber;
 
         return $this;
     }

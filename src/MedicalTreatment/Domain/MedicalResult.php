@@ -12,6 +12,7 @@ class MedicalResult
     protected ?string $treatmentDecision = null;
     protected ?DateTimeImmutable $decisionDate = null;
     protected string $token;
+    protected ?string $agreementNumber = null;
 
     public function __construct(string $token)
     {
@@ -47,5 +48,20 @@ class MedicalResult
     public function getToken(): string
     {
         return $this->token;
+    }
+
+    public function getAgreementNumber(): ?AgreementNumber
+    {
+        if ($this->agreementNumber) {
+            return new AgreementNumber($this->agreementNumber);
+        }
+
+        return null;
+    }
+    public function setAgreementNumber(?string $agreementNumber): self
+    {
+        $this->agreementNumber = $agreementNumber;
+
+        return $this;
     }
 }

@@ -11,4 +11,5 @@ interface MedicalResultRepository
      */
     public function getOneByToken(string $token): MedicalResult;
     public function add(MedicalResult $entity, bool $flush = false): void;
+
 }

@@ -35,7 +35,8 @@ class MedicalResultRepositoryTest extends TestCase
             ->setBody([
                 'id' => 666,
                 'treatmentDecision' => TreatmentDecision::YES->value,
-                'treatmentDecisionAt' => '2022-03-01T21:00:00+000Z'
+                'treatmentDecisionAt' => '2022-03-01T21:00:00+000Z',
+                'agreementNumber' => ''
             ]);
 
         // Create a configuration that reflects the server that was started. You can create a custom MockServerConfigInterface if needed.

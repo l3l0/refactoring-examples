@@ -7,6 +7,8 @@ namespace App\MedicalTreatment\Doctrine;
 use App\Entity\MedicalExaminationOrder;
 use App\Entity\MedicalResult;
 use App\MedicalTreatment\Domain\AgreementNumber;
+use App\MedicalTreatment\Domain\Exception\MedicalResultNotFound;
+use App\MedicalTreatment\Domain\MedicalResultRepository;
 use App\MedicalTreatment\Query\MedicalTreatmentDecisionQuery;
 use App\MedicalTreatment\Query\MediclaTreatmentDecisionQuery\AgreementNumberNotFound;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,7 +19,8 @@ class OrmMedicalTreatmentDecisionQuery implements MedicalTreatmentDecisionQuery
 {
     public function __construct(
         private readonly EntityManagerInterface $manager,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly MedicalResultRepository $medicalResultRepository
     ) {}
 
     /**
@@ -43,11 +46,9 @@ class OrmMedicalTreatmentDecisionQuery implements MedicalTreatmentDecisionQuery
 
     private function getAgreementNumber(string $medicalResultToken): AgreementNumber
     {
-        $result = $this->manager->getRepository(MedicalResult::class)->findOneBy([
-            'token' => $medicalResultToken,
-        ]);
-
-        if (!$result) {
+        try {
+            $result = $this->medicalResultRepository->getOneByToken($medicalResultToken);
+        } catch (MedicalResultNotFound $notFound) {
             throw AgreementNumberNotFound::whenNotFoundMedicalResultForToken($medicalResultToken);
         }
 
