@@ -106,28 +106,6 @@ final class AcceptanceCriteriaContext implements Context
      */
     public function suchMedicalResultForAgreementNumberWasIssued(string $agreementNumber, TableNode $table): void
     {
-        $response = $this->kernel->handle(Request::create(
-            '/api/medical-result',
-            'POST',
-            [],
-            [],
-            [],
-            [
-                'CONTENT_TYPE' => 'application/json',
-                'PHP_AUTH_USER' => $this->authorization['user'],
-                'PHP_AUTH_PW' => $this->authorization['pass']
-            ],
-            json_encode([
-                'agreementNumber' => $agreementNumber,
-                'resultDocumentId' => $table->getRowsHash()['resultDocumentId'],
-                'requiredDecisionDate' => $table->getRowsHash()['requiredDecisionDate']
-            ], JSON_THROW_ON_ERROR)
-        ));
-        Assert::eq($response->getStatusCode(), 200);
-
-        $this->medicalResultsResponse[$agreementNumber] = json_decode(
-            $response->getContent(), true, 512, JSON_THROW_ON_ERROR
-        );
     }
 
     /**

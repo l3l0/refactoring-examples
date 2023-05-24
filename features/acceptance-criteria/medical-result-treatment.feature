@@ -12,4 +12,4 @@ Feature:
         And such medical result for agreement number "UMOWA-01" was issued:
             | resultDocumentId     | f4cfd702-3449-45e7-a8cc-c4c059eed9b5 |
             | requiredDecisionDate | 2022-09-01T19:20:30Z                 |
-        When I decide that treatment is needed for medical result with agreement number "UMOWA-01"
+        Then I decide that treatment is needed for medical result with agreement number "UMOWA-01"
