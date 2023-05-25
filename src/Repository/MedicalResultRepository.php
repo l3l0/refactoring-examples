@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\MedicalResult;
-use App\MedicalTreatment\Domain\MedicalResult as BaseMedicalResult;
 use App\MedicalTreatment\Domain\Exception\MedicalResultNotFound;
 use App\MedicalTreatment\Domain\MedicalResultRepository as MedicalResultRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -24,7 +23,7 @@ class MedicalResultRepository extends ServiceEntityRepository implements Medical
         parent::__construct($registry, MedicalResult::class);
     }
 
-    public function add(BaseMedicalResult $entity, bool $flush = false): void
+    public function add(MedicalResult $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -42,7 +41,7 @@ class MedicalResultRepository extends ServiceEntityRepository implements Medical
         }
     }
 
-    public function getOneByToken(string $token): BaseMedicalResult
+    public function getOneByToken(string $token): MedicalResult
     {
         $medicalResult = $this->findOneBy(['token' => $token]);
 

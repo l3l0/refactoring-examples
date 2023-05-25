@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\MedicalTreatment\OtherApplicationIntegration;
 
+use App\Entity\MedicalResult;
 use App\MedicalTreatment\Domain\Exception\MedicalResultNotFound;
-use App\MedicalTreatment\Domain\MedicalResult;
 use App\MedicalTreatment\Domain\MedicalResultRepository as MedicalResultRepositoryInterface;
 use App\MedicalTreatment\Domain\TreatmentDecision;
 use DateTimeImmutable;
-use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class MedicalResultRepository implements MedicalResultRepositoryInterface
@@ -38,32 +38,27 @@ class MedicalResultRepository implements MedicalResultRepositoryInterface
                 )
                 ->toArray()
             ;
-        } catch (HttpExceptionInterface $exception) {
+        } catch (HttpExceptionInterface|ClientExceptionInterface $exception) {
             $this->logger->error('Error when fetching medical result', ['exception' => $exception]);
             throw MedicalResultNotFound::forToken($token);
         }
 
-        $medicalResult = new MedicalResult($token);
+        $medicalResult = new MedicalResult();
+        $medicalResult->setToken($token);
         $medicalResult->setId((int) $response['id']);
         if ($response['treatmentDecisionAt'] && $response['treatmentDecision']) {
             $medicalResult->decideAboutTreatment(
                 TreatmentDecision::from($response['treatmentDecision']),
                 new DateTimeImmutable($response['treatmentDecisionAt'])
             );
-            $medicalResult->setAgreementNumber($response['agreementNumber'] ?: '');
         }
+        $medicalResult->setAgreementNumber($response['agreementNumber'] ?: '');
 
         return $medicalResult;
     }
 
     public function add(MedicalResult $entity, bool $flush = false): void
     {
-        if (!$entity instanceof \App\Entity\MedicalResult) {
-            throw new InvalidArgumentException('Cannot save entity with generic type');
-        }
-        if (!$flush) {
-            throw new InvalidArgumentException('Cannot save entity in this adapter without flush');
-        }
         $response = $this
             ->httpClient
             ->request(

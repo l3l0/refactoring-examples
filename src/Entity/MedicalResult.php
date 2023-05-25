@@ -3,14 +3,14 @@
 namespace App\Entity;
 
 use App\MedicalTreatment\Domain\AgreementNumber;
-use App\MedicalTreatment\Domain\MedicalResult as BaseMedicalResult;
+use App\MedicalTreatment\Domain\TreatmentDecision;
 use App\Repository\MedicalResultRepository;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MedicalResultRepository::class)]
-class MedicalResult extends BaseMedicalResult
+class MedicalResult
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -24,7 +24,7 @@ class MedicalResult extends BaseMedicalResult
     private ?string $resultDocumentId = null;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?DateTimeImmutable $requiredDecisionDate;
+    private ?DateTimeImmutable $requiredDecisionDate = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $treatmentDecisionType = null;
@@ -43,7 +43,7 @@ class MedicalResult extends BaseMedicalResult
 
     public function __construct()
     {
-        parent::__construct(md5(uniqid((string) mt_rand(), true)));
+        $this->token = md5(uniqid((string) mt_rand(), true));
     }
 
     public function setToken(string $token): self
@@ -123,5 +123,53 @@ class MedicalResult extends BaseMedicalResult
         $this->decisionDate = $decisionDate;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getToken(): string
+    {
+        return $this->token;
+    }
+
+    public function getAgreementNumber(): ?AgreementNumber
+    {
+        return $this->agreementNumber ? new AgreementNumber($this->agreementNumber) : null;
+    }
+
+    /**
+     * @param string|null $agreementNumber
+     */
+    public function setAgreementNumber(?string $agreementNumber): void
+    {
+        $this->agreementNumber = $agreementNumber;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int|null $id
+     */
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function decideAboutTreatment(TreatmentDecision $treatmentDecision, DateTimeImmutable $decisionDate): void
+    {
+        $this->treatmentDecision = $treatmentDecision->value;
+        $this->decisionDate = $decisionDate;
+    }
+
+    public function isAlreadyDecidedAboutTreatment(): bool
+    {
+        return $this->decisionDate !== null;
     }
 }

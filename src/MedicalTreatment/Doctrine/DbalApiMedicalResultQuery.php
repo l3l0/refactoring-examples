@@ -38,7 +38,8 @@ class DbalApiMedicalResultQuery implements ApiMedicalResultQuery
         return new MedicalResult(
             (string) $result['id'],
             $result['treatment_decision'],
-            $result['decision_date'] ? new DateTimeImmutable($result['decision_date']) : null
+            $result['decision_date'] ? new DateTimeImmutable($result['decision_date']) : null,
+            $result['agreement_number'] ?? ''
         );
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\MedicalTreatment\Domain;
 
+use App\Entity\MedicalResult;
 use App\MedicalTreatment\Domain\Exception\MedicalResultNotFound;
 
 interface MedicalResultRepository
@@ -11,5 +12,4 @@ interface MedicalResultRepository
      */
     public function getOneByToken(string $token): MedicalResult;
     public function add(MedicalResult $entity, bool $flush = false): void;
-
 }

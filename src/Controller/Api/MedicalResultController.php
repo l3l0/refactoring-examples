@@ -54,7 +54,9 @@ class MedicalResultController extends AbstractController
         $medicalResult->setDecisionDate($decisionDate);
         $medicalResult->setRequiredDecisionDate($requiredDecisionDate);
         $medicalResult->setTreatmentDecisionType($request->get('treatmentDecisionType'));
-        $medicalResult->setResultDocumentId($request->get('resultDocumentId'));
+        if ($request->get('resultDocumentId')) {
+            $medicalResult->setResultDocumentId($request->get('resultDocumentId'));
+        }
         if ($request->get('token')) {
             $medicalResult->setToken($request->get('token'));
         }
