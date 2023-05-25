@@ -12,7 +12,7 @@ build:
 up:
 	${COMPOSE_COMMAND} up -d
 down:
-	${COMPOSE_COMMAND} up -d
+	${COMPOSE_COMMAND} down
 composer_install:
 	${EXEC_COMMAND} composer install
 bash:
