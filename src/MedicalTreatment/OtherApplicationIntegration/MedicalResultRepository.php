@@ -46,7 +46,7 @@ class MedicalResultRepository implements MedicalResultRepositoryInterface
         $medicalResult = new MedicalResult();
         $medicalResult->setToken($token);
         $medicalResult->setId((int) $response['id']);
-        if ($response['treatmentDecisionAt'] && $response['treatmentDecision']) {
+        if (($response['treatmentDecisionAt'] ?? '') && ($response['treatmentDecision'] ?? '')) {
             $medicalResult->decideAboutTreatment(
                 TreatmentDecision::from($response['treatmentDecision']),
                 new DateTimeImmutable($response['treatmentDecisionAt'])

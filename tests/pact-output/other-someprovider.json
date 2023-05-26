@@ -7,24 +7,59 @@
   },
   "interactions": [
     {
+      "description": "A post request to /other-api/medical-result",
+      "request": {
+        "method": "POST",
+        "path": "/other-api/medical-result",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "id": "666",
+          "decisionDate": "2022-03-01T21:00:00+00:00",
+          "requiredDecisionDate": null,
+          "agreementNumber": "UMOWA-01",
+          "clientIpAddress": null,
+          "resultDocumentId": null,
+          "treatmentDecision": "yes",
+          "treatmentDecisionType": null,
+          "token": "token"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "id": "666"
+        }
+      }
+    },
+    {
       "description": "A get request to /other-api/medical-result/{token}",
       "request": {
         "method": "GET",
-        "path": "/other-api/medical-result/test1234",
+        "path": "/other-api/medical-result/token",
         "headers": {
           "Content-Type": "application/json"
         }
       },
       "response": {
-        "status": 201,
+        "status": 200,
         "headers": {
           "Content-Type": "application/json"
         },
         "body": {
-          "id": 666,
+          "id": "666",
+          "decisionDate": "2022-03-01T21:00:00+00:00",
+          "requiredDecisionDate": null,
+          "agreementNumber": "UMOWA-01",
+          "clientIpAddress": null,
+          "resultDocumentId": null,
           "treatmentDecision": "yes",
-          "treatmentDecisionAt": "2022-03-01T21:00:00+000Z",
-          "agreementNumber": ""
+          "treatmentDecisionType": null,
+          "token": "token"
         }
       }
     }
